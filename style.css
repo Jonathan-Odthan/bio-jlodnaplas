@@ -25,10 +25,11 @@ body {
   line-height: 1.6;
   color: var(--black);
   background: var(--white);
+  overflow-x: clip; /* filet de sécurité : jamais de défilement horizontal */
 }
 
-img, svg { display: block; max-width: 100%; }
-img { height: auto; }
+img, svg, video { display: block; max-width: 100%; }
+img, video { height: auto; }
 ul { margin: 0; padding: 0; list-style: none; }
 h1, h2, h3, p { margin: 0; overflow-wrap: break-word; }
 
@@ -131,17 +132,31 @@ h1, h2, h3, p { margin: 0; overflow-wrap: break-word; }
 
 /* Héros */
 .hero { padding: 40px 0 56px; }
-.hero-grid { display: grid; gap: 28px; align-items: center; }
+/* minmax(0, 1fr) + min-width: 0 : la vidéo ne peut plus élargir la colonne */
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: center; }
+.hero-grid > * { min-width: 0; }
 .hero-logo img { width: 100%; max-width: 340px; margin: 0 auto; mix-blend-mode: multiply; }
 .eyebrow { font-weight: 700; font-size: .85rem; letter-spacing: .08em; color: var(--orange-ink); margin-bottom: 12px; }
 h1 { font-size: clamp(2rem, 7.5vw, 3.6rem); line-height: 1.08; letter-spacing: -.02em; font-weight: 800; max-width: 14em; }
 .lead { margin-top: 18px; font-size: 1.08rem; color: var(--muted); max-width: 36em; }
+
+/* Vidéo du héros */
+.hero-video { width: 100%; max-width: 420px; margin: 20px 0; }
+.hero-video video {
+  width: 100%; height: auto; max-height: 70vh;
+  border-radius: 20px; background: #000; object-fit: contain;
+}
+
 .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
 .cta-row .btn { flex: 1 1 240px; }
 
+@media (max-width: 768px) {
+  .hero-video { max-width: 100%; margin: 16px auto; }
+}
+
 @media (min-width: 860px) {
   .hero { padding: 72px 0 88px; }
-  .hero-grid { grid-template-columns: 1.15fr .85fr; gap: 48px; }
+  .hero-grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 48px; }
   .hero-logo img { max-width: 420px; }
   .cta-row .btn { flex: 0 1 auto; }
 }
@@ -176,7 +191,6 @@ h2 { font-size: clamp(1.55rem, 5vw, 2.2rem); line-height: 1.15; letter-spacing: 
 /* WhatsApp */
 .contact { display: grid; gap: 24px; align-items: center; }
 .contact-action .btn { width: 100%; }
-.phone { margin-top: 10px; font-weight: 600; color: var(--muted); text-align: center; }
 @media (min-width: 860px) {
   .contact { grid-template-columns: 1.3fr 1fr; gap: 56px; }
 }
